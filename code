@@ -1,0 +1,17 @@
+import requests
+import json
+
+def track_transaction(transaction_hash):
+    url = f"https://api.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash={transaction_hash}"
+    response = requests.get(url)
+    data = json.loads(response.text)
+    status = data["result"]["status"]
+    return status
+
+def save_transaction_status_to_github(transaction_hash, status):
+    with open('transaction_history.txt', 'a') as file:
+        file.write(f'Transaction Hash: {transaction_hash}\nStatus: {status}\n\n')
+
+transaction_hash = "<ваш хеш транзакции>"
+status = track_transaction(transaction_hash)
+save_transaction_status_to_github(transaction_hash, status)
